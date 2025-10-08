@@ -1,0 +1,4 @@
+db_password_secret_data = "mypassword123"
+db_password_secret_name = "db_password"
+db_username_secret_data = "myusername123"
+db_username_secret_name = "db_user"
