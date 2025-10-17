@@ -1,4 +1,3 @@
-
 # ----------------- Outputs for DB module -----------------
 
 output "db_container_id" {
@@ -14,4 +13,9 @@ output "db_volume_name" {
 output "db_network_name" {
   value       = var.network_name
   description = "Network name attached to DB"
+}
+
+output "container_name" {
+  description = "Name of the created database container"
+  value       = docker_container.db.name
 }

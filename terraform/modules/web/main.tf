@@ -20,12 +20,12 @@ resource "docker_container" "web" {
   image = var.image
   name  = var.container_name
 
+  env = var.env
+
   ports {
     internal = var.internal_port
     external = var.external_port
   }
-
-  env = var.env
 
   volumes {
     volume_name    = docker_volume.web_data.name
@@ -36,4 +36,6 @@ resource "docker_container" "web" {
     name    = var.network_name
     aliases = [var.alias]
   }
+
+  command = ["sleep", "infinity"]
 }

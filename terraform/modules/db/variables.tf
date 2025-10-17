@@ -36,26 +36,8 @@ variable "alias" {
   type        = string
 }
 
-variable "username_secret_name" {
-  description = "Docker secret name for DB username"
-  type        = string
-  sensitive   = true
-}
-
-variable "username_secret_data" {
-  description = "Data for DB username secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "password_secret_name" {
-  description = "Docker secret name for DB password"
-  type        = string
-  sensitive   = true
-}
-
-variable "password_secret_data" {
-  description = "Data for DB password secret"
-  type        = string
-  sensitive   = true
+variable "env" {
+  description = "Environment variables for the web container"
+  type        = list(string)
+  default     = []
 }

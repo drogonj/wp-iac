@@ -25,3 +25,20 @@ output "web_volume_name" {
   description = "Name of the web server data volume"
   value       = module.web.web_volume_name
 }
+
+output "ansible_inventory_path" {
+  description = "Path to the generated Ansible inventory file"
+  value       = local_file.ansible_inventory.filename
+}
+
+output "db_username" {
+  description = "Database username (sensitive)"
+  value       = var.db_username
+  sensitive   = true
+}
+
+output "db_password" {
+  description = "Database password (sensitive)"
+  value       = var.db_password
+  sensitive   = true
+}

@@ -1,4 +1,3 @@
-
 # ----------------- Outputs for Web module -----------------
 
 output "web_container_id" {
@@ -9,4 +8,9 @@ output "web_container_id" {
 output "web_volume_name" {
   value       = docker_volume.web_data.name
   description = "Name of the web data volume"
+}
+
+output "container_name" {
+  description = "Name of the created web container"
+  value       = docker_container.web.name
 }

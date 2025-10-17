@@ -21,26 +21,16 @@ variable "docker_web_volume_name" {
   default     = "web_data_volume"
 }
 
-# --------------- Docker Secrets ---------------
+# --------------- Secrets ---------------
 
-variable "db_username_secret_name" {
-  description = "Name of the Docker secret for database username"
-  type        = string
-}
-
-variable "db_username_secret_data" {
-  description = "Data for the Docker secret for database username"
+variable "db_username" {
+  description = "Data for the database username"
   type        = string
   sensitive   = true
 }
 
-variable "db_password_secret_name" {
-  description = "Name of the Docker secret for database password"
-  type        = string
-}
-
-variable "db_password_secret_data" {
-  description = "Data for the Docker secret for database password"
+variable "db_password" {
+  description = "Data for the database password"
   type        = string
   sensitive   = true
 }
@@ -96,7 +86,7 @@ variable "web_container_internal_port" {
 variable "web_container_external_port" {
   description = "External port to map to the web server container"
   type        = number
-  default     = 80
+  default     = 8080
 }
 
 variable "web_container_data_path" {
