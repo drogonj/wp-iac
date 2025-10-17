@@ -9,12 +9,14 @@ module "db" {
   internal_port  = var.db_container_internal_port
   data_path      = var.db_container_data_path
   db_volume_name = var.docker_db_volume_name
-  network_name   = var.db_network_name
+  network_name   = var.web_network_name
   alias          = var.db_container_alias
 
   env = [
-    "DB_USERNAME=${var.db_username}",
-    "DB_PASSWORD=${var.db_password}"
+    "MARIADB_ROOT_PASSWORD=${var.db_root_password}",
+    "MARIADB_USER=${var.db_user_username}",
+    "MARIADB_PASSWORD=${var.db_user_password}",
+    "MARIADB_DATABASE=${var.db_name}"
   ]
 }
 
@@ -27,17 +29,36 @@ module "web" {
   external_port   = var.web_container_external_port
   data_path       = var.web_container_data_path
   web_volume_name = var.docker_web_volume_name
-  network_name    = var.db_network_name
+  network_name    = var.web_network_name
   alias           = var.web_container_alias
+
+  env = [
+  ]
+}
+
+module "wordpress" {
+  source = "./modules/wordpress"
+
+  image                 = var.docker_image_name
+  container_name        = var.wordpress_container_name
+  internal_port         = var.wordpress_internal_port
+  data_path             = var.wordpress_container_data_path
+  wordpress_volume_name = var.docker_wordpress_volume_name
+  network_name          = var.web_network_name
+  alias                 = var.wordpress_container_alias
 
   env = [
     "DB_HOST=${var.db_container_name}",
     "DB_PORT=${var.db_container_internal_port}",
-    "DB_USER=${var.db_username}",
-    "DB_PASSWORD=${var.db_password}"
+    "MARIADB_USER=${var.db_user_username}",
+    "MARIADB_PASSWORD=${var.db_user_password}",
+    "MARIADB_DATABASE=${var.db_name}",
+    "WORDPRESS_ADMIN_USERNAME=${var.wordpress_admin_username}",
+    "WORDPRESS_ADMIN_PASSWORD=${var.wordpress_admin_password}",
+    "WORDPRESS_USER=${var.wordpress_user_username}",
+    "WORDPRESS_PASSWORD=${var.wordpress_user_password}"
   ]
 }
-
 
 # Register your containers here
 locals {

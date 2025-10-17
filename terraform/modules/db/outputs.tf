@@ -9,8 +9,8 @@ output "db_volume_name" {
   value       = docker_volume.data.name
   description = "Name of the database volume"
 }
-
-output "db_network_name" {
+  
+output "web_network_name" {
   value       = var.network_name
   description = "Network name attached to DB"
 }

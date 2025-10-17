@@ -23,6 +23,15 @@ resource "ansible_host" "web_host" {
   }
 }
 
+resource "ansible_host" "wordpress_host" {
+  name   = var.wordpress_container_name
+  groups = [ansible_group.containers.name]
+  variables = {
+    ansible_connection         = "community.docker.docker"
+    ansible_python_interpreter = "/usr/bin/python3"
+  }
+}
+
 resource "local_file" "ansible_inventory" {
   filename = "${path.module}/../ansible/inventories/terraform.ini"
   content  = <<EOT
@@ -32,9 +41,13 @@ ${var.db_container_name} ansible_connection=community.docker.docker ansible_pyth
 [web]
 ${var.web_container_name} ansible_connection=community.docker.docker ansible_python_interpreter=/usr/bin/python3
 
+[wordpress]
+${var.wordpress_container_name} ansible_connection=community.docker.docker ansible_python_interpreter=/usr/bin/python3
+
 [containers:children]
 db
 web
+wordpress
 EOT
 }
 
@@ -44,20 +57,30 @@ resource "local_file" "ansible_group_vars" {
   content  = <<EOT
 ---
 # Database configuration
-db_username: "${var.db_username}"
-db_password: "${var.db_password}"
+db_name: "${var.db_name}"
+db_admin_password: "${var.db_admin_password}"
+db_user_username: "${var.db_user_username}"
+db_user_password: "${var.db_user_password}"
 db_host: "${var.db_container_name}"
-db_port: ${var.db_container_internal_port}
-db_name: "myapp"
+db_port: ${var.db_port}
 
 # Web configuration
 web_host: "${var.web_container_name}"
 web_port: ${var.web_container_external_port}
 
+# WordPress configuration
+wordpress_host: "${var.wordpress_container_name}"
+wordpress_port: ${var.wordpress_internal_port}
+wordpress_admin_username: "${var.wordpress_admin_username}"
+wordpress_admin_password: "${var.wordpress_admin_password}"
+wordpress_user_username: "${var.wordpress_user_username}"
+wordpress_user_password: "${var.wordpress_user_password}"
+
 # Container names (for reference)
 containers:
   db: "${var.db_container_name}"
   web: "${var.web_container_name}"
+  wordpress: "${var.wordpress_container_name}"
 EOT
 }
 

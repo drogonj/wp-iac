@@ -1,0 +1,12 @@
+---
+- name: Configure webserver
+  hosts: web
+  gather_facts: True
+  tasks:
+    - name: Display container informations
+      ansible.builtin.debug:
+        msg:
+        - "OS: {{ ansible_distribution }}"
+        - "Hostname: {{ ansible_hostname }}"
+  roles:
+    - web
