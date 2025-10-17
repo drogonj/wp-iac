@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: db-debian
+    image: debian:bookworm
+    memory: 1073741824
+    cpus: 1
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_DISPLAY_OK_HOSTS: "false"
+    ANSIBLE_DISPLAY_SKIPPED_HOSTS: false
+    ANSIBLE_FORCE_COLOR: true
+    ANSIBLE_GATHERING: explicit
+    ANSIBLE_ROLES_PATH: ../../..
+
+verifier:
+  name: ansible
+  

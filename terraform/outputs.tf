@@ -58,26 +58,26 @@ output "db_user_password" {
   sensitive   = true
 }
 
-output "wordpress_admin_username" {
+output "wp_admin_username" {
   description = "WordPress admin username (sensitive)"
-  value       = var.wordpress_admin_username
+  value       = var.wp_admin_username
   sensitive   = true
 }
 
-output "wordpress_admin_password" {
+output "wp_admin_password" {
   description = "WordPress admin password (sensitive)"
-  value       = var.wordpress_admin_password
+  value       = var.wp_admin_password
   sensitive   = true
 }
 
-output "wordpress_user_username" {
+output "wp_user_username" {
   description = "WordPress user username (sensitive)"
-  value       = var.wordpress_user_username
+  value       = var.wp_user_username
   sensitive   = true
 }
 
-output "wordpress_user_password" {
+output "wp_user_password" {
   description = "WordPress user password (sensitive)"
-  value       = var.wordpress_user_password
+  value       = var.wp_user_password
   sensitive   = true
 }

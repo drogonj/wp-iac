@@ -27,7 +27,7 @@ resource "docker_container" "db" {
   }
 
   networks_advanced {
-    name    = var.web_network_name
+    name    = var.network_name
     aliases = [var.alias]
   }
 

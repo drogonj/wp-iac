@@ -1,0 +1,44 @@
+[mariadb]
+# Basic settings
+user                  = mysql
+pid-file              = {{ __mariadb_pid_file | default('/run/mysqld/mysqld.pid') }}
+socket                = {{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}
+basedir               = /usr
+datadir               = {{ __mariadb_data_dir | default('/var/lib/mysql') }}
+tmpdir                = /tmp
+lc-messages-dir       = /usr/share/mysql
+lc_messages           = en_US
+skip-external-locking
+port                  = {{ db_port | default(3306) }}
+bind-address          = {{ __mariadb_bind_address | default('127.0.0.1') }}
+
+# Fine tuning
+max_connections         = {{ __mariadb_max_connections | default(100) }}
+connect_timeout         = {{ __mariadb_connect_timeout | default(5) }}
+wait_timeout            = {{ __mariadb_wait_timeout | default(600) }}
+max_allowed_packet      = {{ __mariadb_max_allowed_packet | default('16M') }}
+thread_cache_size       = 128
+sort_buffer_size        = 4M
+bulk_insert_buffer_size = 16M
+tmp_table_size          = 32M
+max_heap_table_size     = 32M
+
+# Logging
+log_error = {{ __mariadb_log_error_file | default('/var/log/mysql/error.log') }}
+
+# Query cache
+query_cache_size        = 16M
+
+# Character sets
+character-set-server = utf8mb4
+collation-server     = utf8mb4_general_ci
+
+# InnoDB
+# InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
+# Read the manual for more InnoDB related options. There are many!
+
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet = 16M

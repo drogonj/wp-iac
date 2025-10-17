@@ -11,11 +11,6 @@ variable "container_name" {
   type        = string
 }
 
-variable "internal_port" {
-  description = "Internal DB port"
-  type        = number
-}
-
 variable "data_path" {
   description = "Path inside DB container to mount the data volume"
   type        = string

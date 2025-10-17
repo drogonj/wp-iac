@@ -37,7 +37,7 @@ variable "db_container_name" {
   default     = "db_container"
 }
 
-variable "db_container_internal_port" {
+variable "db_port" {
   description = "Internal port on which the database container will listen"
   type        = number
   default     = 3306
@@ -113,6 +113,12 @@ variable "wordpress_internal_port" {
   default     = 8080
 }
 
+variable "wordpress_volume_name" {
+  description = "Docker volume name for WordPress data"
+  type        = string
+  default     = "wordpress_data"
+}
+
 # --------------- Secrets ---------------
 
 variable "db_name" {
@@ -139,25 +145,25 @@ variable "db_user_password" {
   sensitive   = true
 }
 
-variable "wordpress_admin_username" {
+variable "wp_admin_username" {
   description = "Admin username for WordPress (sensitive)"
   type        = string
   sensitive   = true
 }
 
-variable "wordpress_admin_password" {
+variable "wp_admin_password" {
   description = "Admin password for WordPress (sensitive)"
   type        = string
   sensitive   = true
 }
 
-variable "wordpress_user_username" {
+variable "wp_user_username" {
   description = "Username for the WordPress user (sensitive)"
   type        = string
   sensitive   = true
 }
 
-variable "wordpress_user_password" {
+variable "wp_user_password" {
   description = "Password for the WordPress user (sensitive)"
   type        = string
   sensitive   = true

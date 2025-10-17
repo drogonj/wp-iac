@@ -71,10 +71,10 @@ web_port: ${var.web_container_external_port}
 # WordPress configuration
 wordpress_host: "${var.wordpress_container_name}"
 wordpress_port: ${var.wordpress_internal_port}
-wordpress_admin_username: "${var.wordpress_admin_username}"
-wordpress_admin_password: "${var.wordpress_admin_password}"
-wordpress_user_username: "${var.wordpress_user_username}"
-wordpress_user_password: "${var.wordpress_user_password}"
+wp_admin_username: "${var.wp_admin_username}"
+wp_admin_password: "${var.wp_admin_password}"
+wp_user_username: "${var.wp_user_username}"
+wp_user_password: "${var.wp_user_password}"
 
 # Container names (for reference)
 containers:

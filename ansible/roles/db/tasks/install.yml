@@ -1,0 +1,16 @@
+---
+- name: Install mariadb
+  ansible.builtin.apt:
+    name: "{{ __mariadb_server_package }}"
+    state: present
+    update_cache: yes
+  notify:
+    - start mariadb
+
+- name: Ensure mysql client is installed
+  ansible.builtin.apt:
+    name: "{{ __mariadb_client_package }}"
+    state: present
+    update_cache: yes
+
+- meta: flush_handlers

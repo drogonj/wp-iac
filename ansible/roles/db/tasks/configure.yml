@@ -1,0 +1,32 @@
+---
+- name: Deploy MariaDB config from template
+  ansible.builtin.template:
+    src: mariadb.cnf.j2
+    dest: "{{ conf_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart mariadb
+
+- name: Install config script
+  ansible.builtin.copy:
+    src: mariadb_config.sh
+    dest: /usr/local/bin/mariadb_config.sh
+    owner: root
+    group: root
+    mode: 0755
+
+# Force handlers
+- meta: flush_handlers
+
+- name: Run config script
+  ansible.builtin.command:
+    cmd: /usr/local/bin/mariadb_config.sh
+    creates: /var/lib/mysql/.config_done
+  environment:
+    MARIADB_ROOT_PASSWORD: "{{ db_admin_password }}"
+    MARIADB_USER: "{{ db_user_username }}"
+    MARIADB_USER_PASSWORD: "{{ db_user_password }}"
+    MARIADB_DATABASE: "{{ db_name }}"
+    

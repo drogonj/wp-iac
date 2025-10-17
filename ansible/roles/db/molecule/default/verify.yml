@@ -1,0 +1,69 @@
+---
+- name: Verify MariaDB
+  hosts: db-debian
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Wait for MariaDB to be available
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: 3306
+        delay: 10
+        timeout: 300
+
+    - name: Verify database exists (use unix socket for local MariaDB)
+      community.mysql.mysql_query:
+        login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
+        login_user: root
+        login_password: "{{ db_admin_password | default(omit) }}"
+        query: "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{{ db_name }}';"
+      register: db_check
+
+    - name: Debug - show raw mysql_query return (useful when troubleshooting)
+      ansible.builtin.debug:
+        var: db_check
+      when: debug|default(false)
+
+    - name: Assert database exists (corrected to use query_result)
+      ansible.builtin.assert:
+        that:
+          - db_check.query_result is defined
+          - db_check.query_result | length > 0
+          - db_check.query_result[0] | length > 0
+        fail_msg: "Database {{ db_name }} does not exist or query returned no rows."
+
+    # - name: Assert user is created
+    #   ansible.builtin.assert:
+    #     that:
+    #       - db_user_username in mysql_info.users.get('localhost', {})
+    #     fail_msg: "User {{ db_user_username }} was not created."
+
+    # - name: Verify user has access to the database
+    #   community.mysql.mysql_query:
+    #     login_host: 127.0.0.1
+    #     login_user: "{{ db_user_username }}"
+    #     login_password: "{{ db_user_password }}"
+    #     login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
+    #     query: "SHOW DATABASES LIKE '{{ db_name }}';"
+    #   register: user_db_access
+
+    # - name: Assert user has access to the database
+    #   ansible.builtin.assert:
+    #     that:
+    #       - user_db_access.results[0].rows | length > 0
+    #     fail_msg: "User {{ db_user_username }} does not have access to database {{ db_name }}."
+
+    # - name: Assert user have full access to the database
+    #   community.mysql.mysql_query:
+    #     login_host: 127.0.0.1
+    #     login_user: "{{ db_user_username }}"
+    #     login_password: "{{ db_user_password }}"
+    #     login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
+    #     query: "SHOW GRANTS FOR '{{ db_user_username }}'@'localhost';"
+    #   register: user_grants
+
+    # - name: Check if user has ALL PRIVILEGES on the database
+    #   ansible.builtin.assert:
+    #     that:
+    #       - "'ALL PRIVILEGES ON `' + db_name + '`.*' in user_grants.results[0].rows[0][0]"
+    #     fail_msg: "User {{ db_user_username }} does not have full privileges on database {{ db_name }}."

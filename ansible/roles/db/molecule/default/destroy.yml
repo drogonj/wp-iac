@@ -1,0 +1,5 @@
+---
+- name: Destroy
+  hosts: localhost
+  gather_facts: false
+  tasks: []

@@ -16,7 +16,7 @@ apply:
 		set -e; \
 		terraform -chdir=./terraform apply -auto-approve; \
 		echo "Applying Ansible playbook..."; \
-		ansible-playbook -i ansible/inventories/terraform.ini ansible/main.yml; \
+		cd ansible && ansible-playbook -i site.yml; \
 		echo "Apply operation completed."; \
 	else \
 		echo "Apply operation cancelled."; \
@@ -26,7 +26,7 @@ provision:
 	@read -p "Are you sure you want to provision the servers with Ansible? (y/n): " confirm; \
 	if [ "$$confirm" = "y" ]; then \
 		echo "Running Ansible playbook..."; \
-		ansible-playbook -i ansible/inventories/terraform.ini ansible/main.yml; \
+		cd ansible && ansible-playbook site.yml; \
 		echo "Provision operation completed."; \
 	else \
 		echo "Provision operation cancelled."; \
