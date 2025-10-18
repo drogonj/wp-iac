@@ -39,6 +39,10 @@ db_port: 3306
 Testing
 -------
 
+You can run `molecule test` at the root of the role. Tests are described in `verify.yml`.
+
+If an issue in encountered, make sure dependencies are installed: `python3 -m pip install molecule ansible-core`
+
 Example Playbook
 ----------------
 
