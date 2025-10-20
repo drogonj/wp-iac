@@ -16,7 +16,7 @@ apply:
 		set -e; \
 		terraform -chdir=./terraform apply -auto-approve; \
 		echo "Applying Ansible playbook..."; \
-		cd ansible && ansible-playbook -i site.yml; \
+		cd ansible && ansible-playbook site.yml; \
 		echo "Apply operation completed."; \
 	else \
 		echo "Apply operation cancelled."; \
