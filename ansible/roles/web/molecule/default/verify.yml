@@ -1,0 +1,35 @@
+---
+- name: Verify
+  hosts: instance
+  gather_facts: false
+  tasks:
+    - name: Check Nginx is installed
+      ansible.builtin.command: nginx -v
+      register: nginx_version
+      changed_when: false
+
+    - name: Assert Nginx is installed
+      ansible.builtin.assert:
+        that:
+          - nginx_version.rc == 0
+        fail_msg: "Nginx is not installed"
+        success_msg: "Nginx is installed"
+
+    - name: Display Nginx version
+      ansible.builtin.debug:
+        msg: "{{ nginx_version.stderr }}"
+
+    - name: Try to access Nginx default page
+      ansible.builtin.uri:
+        url: http://localhost
+        return_content: yes
+      register: nginx_page
+      changed_when: false
+
+    - name: Assert that the request succeeded
+      ansible.builtin.assert:
+        that:
+          - nginx_page.status == 200
+        fail_msg: "Failed to access Nginx default page"
+        success_msg: "Successfully accessed Nginx default page"
+        

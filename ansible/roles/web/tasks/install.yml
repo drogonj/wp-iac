@@ -1,0 +1,16 @@
+---
+- name: Install nginx package
+  ansible.builtin.apt:
+    name: "{{ __nginx_package_name }}"
+    state: latest
+    update_cache: yes
+  notify:
+    - start nginx
+
+- meta: flush_handlers
+
+- name: Ensure nginx is started and enabled at boot
+  ansible.builtin.service:
+    name: "{{ __nginx_service_name }}"
+    state: started
+    enabled: yes

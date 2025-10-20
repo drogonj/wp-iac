@@ -65,8 +65,8 @@ db_host: "${var.db_container_name}"
 db_port: ${var.db_port}
 
 # Web configuration
+web_server_name: "${var.web_server_name}"
 web_host: "${var.web_container_name}"
-web_port: ${var.web_container_external_port}
 
 # WordPress configuration
 wordpress_host: "${var.wordpress_container_name}"

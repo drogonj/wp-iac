@@ -1,4 +1,4 @@
-Role Name
+DB Role
 =========
 
 An Ansible role to install and configure MariaDB database server.

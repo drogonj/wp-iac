@@ -12,4 +12,5 @@
   ansible.builtin.service:
     name: "{{ __mariadb_service_name }}"
     state: restarted
+    enabled: yes
     use: service

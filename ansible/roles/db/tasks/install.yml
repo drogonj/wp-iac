@@ -14,3 +14,9 @@
     update_cache: yes
 
 - meta: flush_handlers
+
+- name: Ensure mariadb is started and enabled at boot
+  ansible.builtin.service:
+    name: "{{ __mariadb_service_name }}"
+    state: started
+    enabled: yes

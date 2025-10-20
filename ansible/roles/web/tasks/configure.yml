@@ -1,0 +1,47 @@
+---
+- name: Copy nginx main conf if overwritten
+  ansible.builtin.copy:
+    dest: "{{ __nginx_main_conf_file }}"
+    content: "{{ nginx_main_conf }}"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+  when: nginx_main_conf != ""
+
+- name: Copy nginx confs from nginx_confs variable
+  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
+  ansible.builtin.copy:
+    dest: "{{ __nginx_conf_dir }}/{{ item.key }}"
+    content: "{{ item.value }}"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+  loop: "{{ (nginx_confs | default({})) | dict2items }}"
+
+- name: Copy nginx site available confs from nginx_site_available_confs variable
+  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
+  ansible.builtin.copy:
+    dest: "{{ __nginx_sites_available_dir }}/{{ item.key }}"
+    content: "{{ item.value }}"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+  loop: "{{ (nginx_site_available_confs | default({})) | dict2items }}"
+
+- name: Copy nginx site enabled confs from nginx_site_enabled_confs variable
+  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
+  ansible.builtin.copy:
+    dest: "{{ __nginx_sites_enabled_dir }}/{{ item.key }}"
+    content: "{{ item.value }}"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+  loop: "{{ (nginx_site_enabled_confs | default({})) | dict2items }}"
+
+- name: Reload nginx to apply configuration changes
+  ansible.builtin.debug:
+    msg: "Reloading nginx to apply configuration changes"
+  notify:
+    - reload nginx
+  
+- meta: flush_handlers

@@ -8,5 +8,83 @@
         msg:
         - "OS: {{ ansible_distribution }}"
         - "Hostname: {{ ansible_hostname }}"
-  roles:
-    - web
+
+    #####################################################################################
+    # Read files/conf.d and make a dictionary with filename as key and content as value
+    #####################################################################################
+    - name: Find nginx conf files
+      ansible.builtin.find:
+        paths: "{{ playbook_dir }}/files/conf.d"
+        patterns: "*"
+      delegate_to: localhost
+      register: nginx_conf_files
+
+    - name: Initialize nginx confs dictionary
+      ansible.builtin.set_fact:
+        parsed_nginx_confs: {}
+
+    - name: Build nginx confs
+      ansible.builtin.set_fact:
+        parsed_nginx_confs: "{{ parsed_nginx_confs | combine({item.path | basename: lookup('file', item.path)}) }}"
+      loop: "{{ nginx_conf_files.files }}"
+
+    - name: Display nginx confs
+      ansible.builtin.debug:
+        var: parsed_nginx_confs
+        
+    #####################################################################################
+    # Read files/site-enabled and make a dictionary with filename as key and content as value
+    #####################################################################################
+    - name: Find nginx site-enabled files
+      ansible.builtin.find:
+        paths: "{{ playbook_dir }}/files/site-enabled"
+        patterns: "*"
+      delegate_to: localhost
+      register: nginx_site_enabled_files
+
+    - name: Initialize nginx site-enabled confs dictionary
+      ansible.builtin.set_fact:
+        parsed_nginx_site_enabled_confs: {}
+
+    - name: Build nginx site-enabled confs
+      ansible.builtin.set_fact:
+        parsed_nginx_site_enabled_confs: "{{ parsed_nginx_site_enabled_confs | combine({item.path | basename: lookup('file', item.path)}) }}"
+      loop: "{{ nginx_site_enabled_files.files }}"
+
+    - name: Display nginx site-enabled confs
+      ansible.builtin.debug:
+        var: parsed_nginx_site_enabled_confs
+    
+    #####################################################################################
+    # Read files/site-available and make a dictionary with filename as key and content as value
+    #####################################################################################
+    - name: Find nginx site-available files
+      ansible.builtin.find:
+        paths: "{{ playbook_dir }}/files/site-available"
+        patterns: "*"
+      delegate_to: localhost
+      register: nginx_site_available_files
+
+    - name: Initialize nginx site-available confs dictionary
+      ansible.builtin.set_fact:
+        parsed_nginx_site_available_confs: {}
+
+    - name: Build nginx site-available confs
+      ansible.builtin.set_fact:
+        parsed_nginx_site_available_confs: "{{ parsed_nginx_site_available_confs | combine
+        ({item.path | basename: lookup('file', item.path)}) }}"
+      loop: "{{ nginx_site_available_files.files }}"
+
+    - name: Display nginx site-available confs
+      ansible.builtin.debug:
+        var: parsed_nginx_site_available_confs
+
+    #####################################################################################
+
+    - name: Include web role
+      ansible.builtin.include_role:
+        name: web
+      vars:
+        nginx_confs: "{{ parsed_nginx_confs }}"
+        nginx_site_enabled_confs: "{{ parsed_nginx_site_enabled_confs }}"
+        nginx_site_available_confs: "{{ parsed_nginx_site_available_confs }}"

@@ -1,2 +1,22 @@
 ---
 # tasks file for web
+
+- name: Load OS-specific vars
+  ansible.builtin.include_vars:
+    file: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"   # ex: debian.yml, ubuntu.yml
+        - "{{ ansible_os_family }}.yml"      # ex: debian.yml, redhat.yml
+        - "default"                              # fallback
+      paths: "{{ role_path }}/vars"
+
+- name: Starting Nginx role
+  ansible.builtin.debug:
+    msg: "Hello from Nginx role"
+
+- name: Install nginx
+  include_tasks: install.yml
+
+- name: Configure nginx
+  include_tasks: configure.yml

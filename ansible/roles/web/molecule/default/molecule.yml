@@ -6,7 +6,7 @@ driver:
   name: docker
 
 platforms:
-  - name: db-debian-molecule
+  - name: web-debian-molecule
     image: debian:bookworm
     memory: 1073741824
     cpus: 1
