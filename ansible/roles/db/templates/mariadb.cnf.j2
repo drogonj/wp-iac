@@ -10,7 +10,7 @@ lc-messages-dir       = /usr/share/mysql
 lc_messages           = en_US
 skip-external-locking
 port                  = {{ mariadb_port | default(3306) }}
-bind-address          = {{ __mariadb_bind_address | default('127.0.0.1') }}
+bind-address          = {{ mariadb_bind_address | default('127.0.0.1') }}
 
 # Fine tuning
 max_connections         = {{ __mariadb_max_connections | default(100) }}

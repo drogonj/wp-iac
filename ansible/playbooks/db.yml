@@ -8,18 +8,21 @@
         msg:
         - "OS: {{ ansible_distribution }}"
         - "Hostname: {{ ansible_hostname }}"
-  roles:
-    - role: db
-      ansible_python_interpreter: /usr/bin/python3
-      conf_path: /etc/mysql/mariadb.cnf
-      mariadb_bind_address: "127.0.0.1"
-      mariadb_max_connections: 100
-      mariadb_connect_timeout: 5
-      mariadb_wait_timeout: 600
-      mariadb_max_allowed_packet: "16M"
-      mariadb_name: "{{ db_name }}"
-      mariadb_admin_password: "{{ db_admin_password }}"
-      mariadb_user_username: "{{ db_user_username }}"
-      mariadb_user_password: "{{ db_user_password }}"
-      mariadb_host: "{{ db_host }}"
-      mariadb_port: "{{ db_port }}"
+
+    - name: Include db role
+      ansible.builtin.include_role:
+        name: db
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+        conf_path: /etc/mysql/mariadb.cnf
+        mariadb_bind_address: "{{ db_bind_address }}"
+        mariadb_max_connections: 100
+        mariadb_connect_timeout: 5
+        mariadb_wait_timeout: 600
+        mariadb_max_allowed_packet: "16M"
+        mariadb_name: "{{ db_name }}"
+        mariadb_admin_password: "{{ db_admin_password }}"
+        mariadb_user_username: "{{ db_user_username }}"
+        mariadb_user_password: "{{ db_user_password }}"
+        mariadb_host: "{{ db_host }}"
+        mariadb_port: "{{ db_port }}"

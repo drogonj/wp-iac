@@ -1,2 +1,12 @@
 ---
 # handlers file for wordpress
+
+- name: restart php-fpm
+  ansible.builtin.service:
+    name: "php{{ __phpfpm_version }}-fpm"
+    state: restarted
+
+- name: reload php-fpm
+  ansible.builtin.service:
+    name: "php{{ __phpfpm_version }}-fpm"
+    state: reloaded

@@ -8,6 +8,11 @@
     mode: '0644'
   when: nginx_main_conf is defined and nginx_main_conf | length > 0
 
+- name: Disable default nginx site
+  ansible.builtin.file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+
 - name: Apply all nginx confs
   ansible.builtin.template:
     src: "yaml_to_nginx.conf.j2"

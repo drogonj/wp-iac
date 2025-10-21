@@ -1,0 +1,62 @@
+---
+- name: Download WP-CLI
+  ansible.builtin.get_url:
+    url: "{{ __wp_cli_download_url }}"
+    dest: "/tmp/wp-cli.phar"
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Install WP-CLI
+  ansible.builtin.copy:
+    src: "/tmp/wp-cli.phar"
+    dest: "{{ __wp_cli_install_path }}"
+    mode: '0755'
+    owner: root
+    group: root
+    remote_src: yes
+
+- name: Ensure WordPress directory exists
+  ansible.builtin.file:
+    path: "{{ wordpress_path }}"
+    state: directory
+    owner: "{{ __wp_user }}"
+    group: "{{ __wp_group }}"
+    mode: '0775'
+
+- name: Copy wp_install.sh script to /tmp
+  ansible.builtin.copy:
+    src: "wp_install.sh"
+    dest: "/tmp/wp_install.sh"
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Run wp_install.sh script
+  ansible.builtin.command:
+    cmd: "/tmp/wp_install.sh"
+    creates: "{{ wordpress_path }}/.configured"
+  environment:
+    WP_PATH: "{{ wordpress_path }}"
+    WP_BACKEND_USER: "{{ __wp_user }}"
+    WP_BACKEND_GROUP: "{{ __wp_group }}"
+    WP_ADMIN_USERNAME: "{{ wp_admin_username }}"
+    WP_ADMIN_PASSWORD: "{{ wp_admin_password }}"
+    WP_ADMIN_EMAIL: "{{ wp_admin_email }}"
+    WP_USER_USERNAME: "{{ wp_user_username }}"
+    WP_USER_PASSWORD: "{{ wp_user_password }}"
+    WP_USER_EMAIL: "{{ wp_user_email }}"
+    WP_TITLE: "{{ wp_site_title }}"
+    MARIADB_DATABASE: "{{ db_name }}"
+    MARIADB_USER: "{{ db_user_username }}"
+    MARIADB_USER_PASSWORD: "{{ db_user_password }}"
+    MARIADB_HOST: "{{ db_host }}"
+    MARIADB_PORT: "{{ db_port }}"
+    WEBSITE_URL: "{{ wordpress_website_url | default('http://localhost') }}"
+
+
+- name: Ensure PHP-FPM is started
+  ansible.builtin.service:
+    name: "php{{ __phpfpm_version }}-fpm"
+    state: started
+    enabled: yes

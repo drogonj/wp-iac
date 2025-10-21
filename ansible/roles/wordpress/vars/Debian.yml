@@ -1,0 +1,8 @@
+---
+__wp_user: www-data
+__wp_group: www-data
+
+__phpfpm_version: "7.4"
+__wp_cli_download_url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+__wp_cli_install_path: /usr/local/bin/wp

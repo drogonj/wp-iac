@@ -1,0 +1,44 @@
+---
+- name: Install PHP-FPM and dependencies
+  ansible.builtin.apt:
+    name:
+      - "php{{ __phpfpm_version }}"
+      - "php{{ __phpfpm_version }}-fpm"
+      - "php{{ __phpfpm_version }}-cli"
+      - "php{{ __phpfpm_version }}-mysql"
+      - "php{{ __phpfpm_version }}-gd"
+      - "php{{ __phpfpm_version }}-curl"
+      - "php{{ __phpfpm_version }}-xml"
+      - "php{{ __phpfpm_version }}-mbstring"
+      - curl
+      - unzip
+    state: present
+    update_cache: yes
+
+- name: Ensure __wp_user exists
+  ansible.builtin.user:
+    name: "{{ __wp_user }}"
+    state: present
+    system: yes
+    create_home: no
+
+- name: Configure PHP-FPM to run as __wp_user (user)
+  ansible.builtin.lineinfile:
+    path: /etc/php/{{ __phpfpm_version }}/fpm/pool.d/www.conf
+    regexp: '^user ='
+    line: 'user = {{ __wp_user }}'
+  notify: restart php-fpm
+
+- name: Configure PHP-FPM to run as __wp_group (group)
+  ansible.builtin.lineinfile:
+    path: /etc/php/{{ __phpfpm_version }}/fpm/pool.d/www.conf
+    regexp: '^group ='
+    line: 'group = {{ __wp_group }}'
+  notify: restart php-fpm
+
+- name: Configure PHP-FPM to listen on all interfaces port 9000
+  ansible.builtin.lineinfile:
+    path: /etc/php/{{ __phpfpm_version }}/fpm/pool.d/www.conf
+    regexp: '^listen ='
+    line: 'listen = 0.0.0.0:9000'
+  notify: restart php-fpm
