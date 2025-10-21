@@ -29,7 +29,7 @@ resource "docker_container" "web" {
 
   volumes {
     volume_name    = docker_volume.web_data.name
-    container_path = var.data_path
+    container_path = var.volume_mount_path
   }
 
   networks_advanced {

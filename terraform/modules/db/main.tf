@@ -23,7 +23,7 @@ resource "docker_container" "db" {
 
   volumes {
     volume_name    = docker_volume.data.name
-    container_path = var.data_path
+    container_path = var.volume_mount_path
   }
 
   networks_advanced {

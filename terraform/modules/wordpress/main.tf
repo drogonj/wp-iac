@@ -24,7 +24,7 @@ resource "docker_container" "wordpress" {
 
   volumes {
     volume_name    = docker_volume.wordpress_data.name
-    container_path = var.data_path
+    container_path = var.volume_mount_path
   }
 
   networks_advanced {

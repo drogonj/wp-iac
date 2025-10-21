@@ -15,10 +15,10 @@ variable "docker_db_volume_name" {
   default     = "db_data_volume"
 }
 
-variable "docker_web_volume_name" {
-  description = "Name of the Docker volume for web server data"
+variable "wordpress_volume_name" {
+  description = "Docker volume name for WordPress data"
   type        = string
-  default     = "web_data_volume"
+  default     = "wordpress_data"
 }
 
 # --------------- Docker Networks ---------------
@@ -37,22 +37,16 @@ variable "db_container_name" {
   default     = "db_container"
 }
 
-variable "db_port" {
-  description = "Internal port on which the database container will listen"
-  type        = number
-  default     = 3306
-}
-
-variable "db_container_data_path" {
-  description = "Path inside the database container to mount the data volume"
-  type        = string
-  default     = "/var/lib/postgresql/data"
-}
-
 variable "db_container_alias" {
   description = "Network alias for the database container"
   type        = string
   default     = "postgres"
+}
+
+variable "db_volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
+  type        = string
+  default     = "/var/lib/postgresql/data"
 }
 
 # --------------- Web Server Container ---------------
@@ -75,16 +69,18 @@ variable "web_container_external_port" {
   default     = 8080
 }
 
-variable "web_container_data_path" {
-  description = "Path inside the web server container to mount the data volume"
-  type        = string
-  default     = "/usr/share/nginx/html"
-}
-
 variable "web_container_alias" {
   description = "Network alias for the web server container"
   type        = string
   default     = "web"
+}
+
+# Use wordpress volume name
+
+variable "web_volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
+  type        = string
+  default     = "/var/www/html"
 }
 
 # --------------- WordPress Container ---------------
@@ -95,76 +91,14 @@ variable "wordpress_container_name" {
   default     = "wordpress_container"
 }
 
-variable "wordpress_container_data_path" {
-  description = "Path inside the WordPress container to mount the data volume"
-  type        = string
-  default     = "/var/www/html"
-}
-
 variable "wordpress_container_alias" {
   description = "Network alias for the WordPress container"
   type        = string
   default     = "wordpress"
 }
 
-variable "wordpress_internal_port" {
-  description = "Port on which the WordPress container will listen"
-  type        = number
-  default     = 8080
-}
-
-variable "wordpress_volume_name" {
-  description = "Docker volume name for WordPress data"
+variable "wordpress_volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
   type        = string
-  default     = "wordpress_data"
-}
-
-# --------------- Secrets ---------------
-
-variable "db_name" {
-  description = "Name of the database (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_admin_password" {
-  description = "Admin password for the database (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_user_username" {
-  description = "Username for the database user (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_user_password" {
-  description = "Password for the database user (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "wp_admin_username" {
-  description = "Admin username for WordPress (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "wp_admin_password" {
-  description = "Admin password for WordPress (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "wp_user_username" {
-  description = "Username for the WordPress user (sensitive)"
-  type        = string
-  sensitive   = true
-}
-
-variable "wp_user_password" {
-  description = "Password for the WordPress user (sensitive)"
-  type        = string
-  sensitive   = true
+  default     = "/var/www/html"
 }

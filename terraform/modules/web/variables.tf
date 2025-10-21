@@ -21,11 +21,6 @@ variable "external_port" {
   type        = number
 }
 
-variable "data_path" {
-  description = "Path inside the web container to mount data"
-  type        = string
-}
-
 variable "web_volume_name" {
   description = "Docker volume name for web data"
   type        = string
@@ -38,6 +33,11 @@ variable "network_name" {
 
 variable "alias" {
   description = "Network alias for web"
+  type        = string
+}
+
+variable "volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
   type        = string
 }
 

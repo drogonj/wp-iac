@@ -11,11 +11,6 @@ variable "container_name" {
   type        = string
 }
 
-variable "data_path" {
-  description = "Path inside the web container to mount data"
-  type        = string
-}
-
 variable "wordpress_volume_name" {
   description = "Docker volume name for wordpress data"
   type        = string
@@ -28,6 +23,11 @@ variable "network_name" {
 
 variable "alias" {
   description = "Network alias for wordpress"
+  type        = string
+}
+
+variable "volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
   type        = string
 }
 

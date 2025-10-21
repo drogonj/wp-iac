@@ -11,11 +11,6 @@ variable "container_name" {
   type        = string
 }
 
-variable "data_path" {
-  description = "Path inside DB container to mount the data volume"
-  type        = string
-}
-
 variable "db_volume_name" {
   description = "Name of the DB docker volume"
   type        = string
@@ -31,8 +26,13 @@ variable "alias" {
   type        = string
 }
 
+variable "volume_mount_path" {
+  description = "Path inside the container where the volume will be mounted"
+  type        = string
+}
+
 variable "env" {
-  description = "Environment variables for the web container"
+  description = "Environment variables for the DB container"
   type        = list(string)
   default     = []
 }

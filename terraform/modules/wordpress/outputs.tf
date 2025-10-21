@@ -10,6 +10,11 @@ output "wordpress_volume_name" {
   description = "Name of the wordpress data volume"
 }
 
+output "wordpress_network_name" {
+  description = "Name of the Docker network for wordpress"
+  value       = var.network_name
+}
+
 output "container_name" {
   description = "Name of the created wordpress container"
   value       = docker_container.wordpress.name

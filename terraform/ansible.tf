@@ -51,39 +51,6 @@ wordpress
 EOT
 }
 
-# Generate Ansible variables from Terraform
-resource "local_file" "ansible_group_vars" {
-  filename = "${path.module}/../ansible/group_vars/all.yml"
-  content  = <<EOT
----
-# Database configuration
-db_name: "${var.db_name}"
-db_admin_password: "${var.db_admin_password}"
-db_user_username: "${var.db_user_username}"
-db_user_password: "${var.db_user_password}"
-db_host: "${var.db_container_name}"
-db_port: ${var.db_port}
-
-# Web configuration
-web_server_name: "${var.web_server_name}"
-web_host: "${var.web_container_name}"
-
-# WordPress configuration
-wordpress_host: "${var.wordpress_container_name}"
-wordpress_port: ${var.wordpress_internal_port}
-wp_admin_username: "${var.wp_admin_username}"
-wp_admin_password: "${var.wp_admin_password}"
-wp_user_username: "${var.wp_user_username}"
-wp_user_password: "${var.wp_user_password}"
-
-# Container names (for reference)
-containers:
-  db: "${var.db_container_name}"
-  web: "${var.web_container_name}"
-  wordpress: "${var.wordpress_container_name}"
-EOT
-}
-
 # Install python3 on all managed containers
 resource "null_resource" "install_python" {
   for_each = toset(local.managed_containers)
