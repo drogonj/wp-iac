@@ -46,8 +46,6 @@ If an issue in encountered, make sure dependencies are installed: `python3 -m pi
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
 - hosts: db_container
   roles:
      - db

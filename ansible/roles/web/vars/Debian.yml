@@ -9,11 +9,3 @@ __nginx_service_name: nginx
 
 __nginx_main_conf_file: /etc/nginx/nginx.conf
 __nginx_conf_dir: /etc/nginx/conf.d
-__nginx_sites_available_dir: /etc/nginx/sites-available
-__nginx_sites_available_default: /etc/nginx/sites-available/default.conf
-__nginx_sites_enabled_dir: /etc/nginx/sites-enabled
-__nginx_sites_enabled_default: /etc/nginx/sites-enabled/default.conf
-__nginx_default_site: default
-__nginx_log_path: /var/log/nginx
-__nginx_pid_file: /run/nginx.pid
-

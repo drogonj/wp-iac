@@ -1,7 +1,7 @@
 WEB (Nginx web server)
 =========
 
-A brief description of the role goes here.
+An Ansible role to install and configure Nginx web server on Debian-based systems.
 
 Requirements
 ------------
@@ -18,49 +18,36 @@ Role Variables
 ```
 ansible_python_interpreter: /usr/bin/python3
 
-# nginx.conf to include
-nginx_main_conf: ""
+# Replace default nginx.conf if needed
+nginx_main_conf: {}
 
-# conf.d/ files to include
-nginx_confs : {
-  "example.conf": "server { listen 80; server_name example.com; }"
-}
 
-# sites-available/default.conf (Key:Value pairs -> Key:name_of_conf_file, Value: content of the file)
-nginx_site_available_confs: {
-  "default.conf": "server { listen 80; server_name _; }"
-}
+# Contains nginx site configurations (example bellow)
+nginx_confs: {}
 
-# sites-enabled/default.conf (Key:Value pairs -> Key:name_of_conf_file, Value: content of the file)
-nginx_site_enabled_confs: {
-  "default.conf": "server { listen 80; server_name _; }"
-}
 ```
 
 Example Playbook
 ----------------
+# Vars
+yaml_nginx_confs:
+  custom.conf:
+    server:
+      listen: 80
+      server_name: example.com
+      root: /var/www/html;
+      index: index.php index.html index.htm;
+    server:
+      listen: 443 ssl
+      server_name: example.com
+      ssl_certificate: /etc/ssl/certs/example.com.crt
+      ssl_certificate_key: /etc/ssl/private/example.com.key
+      root: /var/www/html;
+      index: index.php index.html index.htm;
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
+# Playbook
     - hosts: servers
       roles:
          - role: web
-            nginx_main_conf: "/etc/nginx/nginx.conf"
-            nginx_confs:
-              "example.conf": |
-                server {
-                  listen 80;
-                  server_name example.com;
-                }
-            nginx_site_available_confs:
-              "default.conf": |
-                server {
-                  listen 80;
-                  server_name _;
-                }
-            nginx_site_enabled_confs:
-              "default.conf": |
-                server {
-                  listen 80;
-                  server_name _;
-                }
+            nginx_confs: {{ yaml_nginx_confs }}
+
