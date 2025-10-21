@@ -2,17 +2,12 @@
 
 ansible_python_interpreter: /usr/bin/python3
 
-# nginx.conf to include
-nginx_main_conf: ""
+nginx_main_conf: {}
 
-# conf.d/ files to include
 nginx_confs:
-  example.conf: "server { listen 80; server_name example.com; }"
+  default.conf:
+    listen: 80
+    server_name: localhost
+    root: /var/www/html
+    index: index.html index.htm index.php
 
-# sites-available/default.conf (Key:Value pairs -> Key:name_of_conf_file, Value: content of the file)
-nginx_site_available_confs:
-  default.conf: "server { listen 80; server_name _; }"
-
-# sites-enabled/default.conf (Key:Value pairs -> Key:name_of_conf_file, Value: content of the file)
-nginx_site_enabled_confs:
-  default.conf: "server { listen 80; server_name _; }"

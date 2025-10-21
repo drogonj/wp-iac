@@ -6,37 +6,19 @@
     owner: www-data
     group: www-data
     mode: '0644'
-  when: nginx_main_conf != ""
+  when: nginx_main_conf is defined and nginx_main_conf | length > 0
 
-- name: Copy nginx confs from nginx_confs variable
-  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
-  ansible.builtin.copy:
-    dest: "{{ __nginx_conf_dir }}/{{ item.key }}"
-    content: "{{ item.value }}"
+- name: Apply all nginx confs
+  ansible.builtin.template:
+    src: "yaml_to_nginx.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ item.key }}"
     owner: www-data
     group: www-data
     mode: '0644'
-  loop: "{{ (nginx_confs | default({})) | dict2items }}"
-
-- name: Copy nginx site available confs from nginx_site_available_confs variable
-  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
-  ansible.builtin.copy:
-    dest: "{{ __nginx_sites_available_dir }}/{{ item.key }}"
-    content: "{{ item.value }}"
-    owner: www-data
-    group: www-data
-    mode: '0644'
-  loop: "{{ (nginx_site_available_confs | default({})) | dict2items }}"
-
-- name: Copy nginx site enabled confs from nginx_site_enabled_confs variable
-  # (Key:Value pairs -> Key: name_of_conf_file, Value: content of the file)
-  ansible.builtin.copy:
-    dest: "{{ __nginx_sites_enabled_dir }}/{{ item.key }}"
-    content: "{{ item.value }}"
-    owner: www-data
-    group: www-data
-    mode: '0644'
-  loop: "{{ (nginx_site_enabled_confs | default({})) | dict2items }}"
+  loop: "{{ nginx_confs | dict2items }}"
+  vars:
+    nginx_config: "{{ item.value }}"
+  when: nginx_confs is defined and nginx_confs | length > 0
 
 - name: Reload nginx to apply configuration changes
   ansible.builtin.debug:
