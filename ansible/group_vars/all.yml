@@ -1,0 +1,57 @@
+---
+
+# PUSHED FOR DEMO PURPOSES ONLY - REPLACE WITH YOUR OWN VALUES
+
+# Database configuration
+db_bind_address: "0.0.0.0"
+db_name: "my_database"
+db_admin_password: "adminpassword123"
+db_user_username: "myusername123"
+db_user_password: "mypassword123"
+db_host: "db_container"
+db_port: 3306
+
+# Web configuration
+website_url: "http://localhost:8080"
+web_host: "web_container"
+
+# WordPress configuration
+wordpress_website_url: "http://localhost:8080"
+wordpress_path: "/var/www/html"
+wp_site_title: "WP-IaC"
+wordpress_host: "wordpress_container"
+wp_admin_username: "wpadmin"
+wp_admin_password: "adminpassword123"
+wp_admin_email: "admin@example.com"
+wp_user_username: "foo"
+wp_user_password: "foopassword123"
+wp_user_email: "foo@example.com"
+
+# Container names (for reference)
+containers:
+  db: "db_container"
+  web: "web_container"
+  wordpress: "wordpress_container"
+
+
+# Nginx configurations (YAML formatted string)
+yaml_nginx_confs:
+  custom.conf:
+    server:
+      listen:
+        - 80
+        - '[::]:80'
+      server_name: localhost
+
+      root: /var/www/html
+      index: index.php
+
+      location /:
+        try_files: $uri $uri/ /index.php?$args
+
+      location ~ \.php$:
+        include: fastcgi.conf
+        fastcgi_pass: wordpress_container:9000
+        fastcgi_intercept_errors: on
+        fastcgi_index: index.php
+    
