@@ -1,0 +1,14 @@
+---
+# Purpose: bring the instance to the desired state by running the role under test.
+# Molecule calls this playbook with `molecule converge`.
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Apply WordPress role
+      ansible.builtin.include_role:
+        name: wordpress
+      # Variables are loaded from vars/main.yml
+      # This ensures WordPress uses the same DB credentials that were created in prepare.yml

@@ -6,9 +6,9 @@
     file: "{{ item }}"
   with_first_found:
     - files:
-        - "{{ ansible_distribution }}.yml"   # ex: debian.yml, ubuntu.yml
-        - "{{ ansible_os_family }}.yml"      # ex: debian.yml, redhat.yml
-        - "default"                              # fallback
+        - "{{ ansible_distribution | lower }}.yml"   # ex: debian.yml, ubuntu.yml
+        - "{{ ansible_os_family | lower }}.yml"      # ex: debian.yml, redhat.yml
+        - "default"
       paths: "{{ role_path }}/vars"
 
 - name: Starting Nginx role

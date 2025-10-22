@@ -11,9 +11,9 @@ mariadb_connect_timeout: 5
 mariadb_wait_timeout: 600
 mariadb_max_allowed_packet: "16M"
 
-db_name: "my_database"
-db_admin_password: "adminpassword123"
-db_user_username: "myusername123"
-db_user_password: "mypassword123"
-db_host: "db_container"
-db_port: 3306
+mariadb_name: "my_database"
+mariadb_admin_password: "adminpassword123"
+mariadb_user_username: "myusername123"
+mariadb_user_password: "mypassword123"
+mariadb_host: "db_container"
+mariadb_port: 3306

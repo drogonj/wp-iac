@@ -64,4 +64,7 @@ find $WP_PATH -type d -exec chmod 755 {} \;
 find $WP_PATH -type f -exec chmod 644 {} \;
 chmod 600 $WP_PATH/wp-config.php
 
+# Create marker file to indicate configuration is complete
+touch $WP_PATH/.configured
+
 echo "Configuration completed successfully"

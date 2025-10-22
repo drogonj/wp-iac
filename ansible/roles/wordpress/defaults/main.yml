@@ -3,7 +3,7 @@
 wordpress_website_url: "localhost"
 wordpress_site_title: "wp-site"
 #users
-wordpress_admin_user: "wpadmin"
+wordpress_admin_username: "wpadmin"
 wordpress_admin_password: "adminpassword123"
 wordpress_admin_email: "admin@example.com"
 wordpress_user_username: "foo"
@@ -13,7 +13,7 @@ wordpress_user_email: "foo@example.com"
 wordpress_db_name: "wp-db"
 wordpress_db_user: "db_user"
 wordpress_db_password: "dbpassword123"
-wordpress_db_host: "mariadb"
+wordpress_db_host: "localhost"  # In single-container Molecule setup, DB is on localhost
 wordpress_db_port: 3306
 #others
 wordpress_path: "/var/www/html"

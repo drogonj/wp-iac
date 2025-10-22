@@ -1,0 +1,74 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Check if WordPress directory exists
+      ansible.builtin.stat:
+        path: "{{ wordpress_path }}"
+      register: wp_dir
+
+    - name: Verify WordPress directory exists
+      ansible.builtin.assert:
+        that:
+          - wp_dir.stat.exists
+          - wp_dir.stat.isdir
+        fail_msg: "WordPress directory does not exist"
+        success_msg: "WordPress directory exists"
+
+    - name: Check if wp-config.php exists
+      ansible.builtin.stat:
+        path: "{{ wordpress_path }}/wp-config.php"
+      register: wp_config
+
+    - name: Verify wp-config.php exists
+      ansible.builtin.assert:
+        that:
+          - wp_config.stat.exists
+        fail_msg: "wp-config.php does not exist"
+        success_msg: "wp-config.php exists"
+
+    - name: Check MariaDB service is running
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+      check_mode: true
+      register: mariadb_service
+
+    - name: Verify MariaDB is running
+      ansible.builtin.assert:
+        that:
+          - mariadb_service is not changed
+        fail_msg: "MariaDB service is not running"
+        success_msg: "MariaDB service is running"
+
+    - name: Check if WordPress database exists
+      ansible.builtin.command: >
+        mysql -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='{{ wordpress_db_name }}'"
+      register: db_check
+      changed_when: false
+      failed_when: false
+
+    - name: Verify WordPress database exists
+      ansible.builtin.assert:
+        that:
+          - wordpress_db_name in db_check.stdout
+        fail_msg: "WordPress database '{{ wordpress_db_name }}' does not exist"
+        success_msg: "WordPress database '{{ wordpress_db_name }}' exists"
+
+    - name: Verify database user can connect
+      ansible.builtin.command: >
+        mysql -u {{ wordpress_db_user }} -p{{ wordpress_db_password }} -e "SELECT 1"
+      register: db_user_check
+      changed_when: false
+      failed_when: false
+      no_log: true
+
+    - name: Assert database user has access
+      ansible.builtin.assert:
+        that:
+          - db_user_check.rc == 0
+        fail_msg: "Database user '{{ wordpress_db_user }}' cannot connect"
+        success_msg: "Database user '{{ wordpress_db_user }}' can connect successfully"

@@ -7,7 +7,7 @@ driver:
 
 platforms:
   - name: db-debian-molecule
-    image: debian:bookworm
+    image: debian:bullseye-slim
     memory: 1073741824
     cpus: 1
     pre_build_image: true

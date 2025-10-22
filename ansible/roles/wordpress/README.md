@@ -1,38 +1,72 @@
-Role Name
+Wordpress Role
 =========
 
-A brief description of the role goes here.
+An Ansible Role that installs and configures WordPress on a web server. 
+
+This role does not contain a database.
+
+It needs the "DB" role (of this project) to be tested with molecule.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The host should be a **Debian-based** system (buster, bullseye, bookworm) with **Ansible installed**.
+
+**Molecule 5.0.1** is required for testing.
+
+**Docker** is required to run the Molecule tests.
+
+A **mariadb** role or **mysql** role of this project is required for WordPress to work.
+
+**db** role of this project is required for testing with molecule.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+```
+# defaults file for wordpress
+wordpress_website_url: "localhost"
+wordpress_site_title: "wp-site"
+#users
+wordpress_admin_username: "wpadmin"
+wordpress_admin_password: "adminpassword123"
+wordpress_admin_email: "admin@example.com"
+wordpress_user_username: "foo"
+wordpress_user_password: "foopassword123"
+wordpress_user_email: "foo@example.com"
+#database
+wordpress_db_name: "wp-db"
+wordpress_db_user: "db_user"
+wordpress_db_password: "dbpassword123"
+wordpress_db_host: "mariadb"
+wordpress_db_port: 3306
+#others
+wordpress_path: "/var/www/html"
+```
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+    - name: Include wordpress role
+      ansible.builtin.include_role:
+        name: wordpress
+      vars:
+        wp_website_url: "{{ website_url }}"
+        wordpress_site_title: "{{ wp_site_title }}"
+        #users
+        wordpress_admin_username: "{{ wp_admin_username }}"
+        wordpress_admin_password: "{{ wp_admin_password }}"
+        wordpress_admin_email: "{{ wp_admin_email }}"
+        wordpress_user_username: "{{ wp_user_username }}"
+        wordpress_user_password: "{{ wp_user_password }}"
+        wordpress_user_email: "{{ wp_user_email }}"
+        #database
+        wordpress_db_name: "{{ db_name }}"
+        wordpress_db_user: "{{ db_user_username }}"
+        wordpress_db_password: "{{ db_user_password }}"
+        wordpress_db_host: "{{ db_host }}"
+        wordpress_db_port: "{{ db_port }}"
+        #others
+        wordpress_path: "/var/www/html"

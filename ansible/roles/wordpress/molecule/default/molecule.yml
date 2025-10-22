@@ -6,7 +6,7 @@ driver:
   name: docker
 
 platforms:
-  - name: web-debian-molecule
+  - name: wp-debian-molecule
     image: debian:bullseye-slim
     memory: 1073741824
     cpus: 1

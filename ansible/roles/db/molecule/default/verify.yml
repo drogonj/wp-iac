@@ -1,13 +1,13 @@
 ---
 - name: Verify MariaDB
-  hosts: db-debian
+  hosts: all
   vars_files:
     - vars/main.yml
   tasks:
     - name: Wait for MariaDB to be available
       ansible.builtin.wait_for:
         host: 127.0.0.1
-        port: "{{ db_port | default(3306) }}"
+        port: "{{ mariadb_port | default(3306) }}"
         delay: 10
         timeout: 300
 
@@ -15,8 +15,8 @@
       community.mysql.mysql_query:
         login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
         login_user: root
-        login_password: "{{ db_admin_password | default(omit) }}"
-        query: "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{{ db_name }}';"
+        login_password: "{{ mariadb_admin_password | default(omit) }}"
+        query: "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{{ mariadb_name }}';"
       register: db_check
 
     - name: Assert database exists
@@ -25,14 +25,14 @@
           - db_check.query_result is defined
           - db_check.query_result | length > 0
           - db_check.query_result[0] | length > 0
-        fail_msg: "Database {{ db_name }} does not exist or query returned no rows."
+        fail_msg: "Database {{ mariadb_name }} does not exist or query returned no rows."
 
     - name: Verify user exists
       community.mysql.mysql_query:
         login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
         login_user: root
-        login_password: "{{ db_admin_password | default(omit) }}"
-        query: "SELECT User FROM mysql.user WHERE User = '{{ db_user_username }}';"
+        login_password: "{{ mariadb_admin_password | default(omit) }}"
+        query: "SELECT User FROM mysql.user WHERE User = '{{ mariadb_user_username }}';"
       register: user_check
 
     - name: Assert user exists
@@ -41,18 +41,18 @@
           - user_check.query_result is defined
           - user_check.query_result | length > 0
           - user_check.query_result[0] | length > 0
-        fail_msg: "User {{ db_user_username }} does not exist."
+        fail_msg: "User {{ mariadb_user_username }} does not exist."
 
     - name: Retrieve user permissions on database
       community.mysql.mysql_query:
         login_unix_socket: "{{ __mariadb_unix_socket | default('/run/mysqld/mysqld.sock') }}"
         login_user: root
-        login_password: "{{ db_admin_password | default(omit) }}"
-        query: "SHOW GRANTS FOR '{{ db_user_username }}'@'%';"
+        login_password: "{{ mariadb_admin_password | default(omit) }}"
+        query: "SHOW GRANTS FOR '{{ mariadb_user_username }}'@'%';"
       register: user_grants
 
     - name: Check if user has ALL PRIVILEGES on the database
       ansible.builtin.assert:
         that:
-          - user_grants.query_result | flatten | select('search', 'ALL PRIVILEGES ON `' + db_name + '`.*') | list | length > 0
-        fail_msg: "User {{ db_user_username }} does not have full privileges on database {{ db_name }}."
+          - user_grants.query_result | flatten | select('search', 'ALL PRIVILEGES ON `' + mariadb_name + '`.*') | list | length > 0
+        fail_msg: "User {{ mariadb_user_username }} does not have full privileges on database {{ mariadb_name }}."
