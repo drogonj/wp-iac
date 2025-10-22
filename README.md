@@ -76,3 +76,4 @@ Molecule provisions a disposable Docker container, applies the role, and verifie
 ## Todo ???
 
 - Add CI pipelines to run `terraform fmt`, `terraform validate`, and Molecule automatically.
+- Use ansible-vault for secrets management
