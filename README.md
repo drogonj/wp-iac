@@ -8,7 +8,7 @@ A personnal project, focused on applying Terraform and Ansible best practices. I
 
 - **Terraform** uses the `kreuzwerker/docker` provider to declare Docker images, networks, volumes, and three containers (database, web server, and WordPress).
 - Each container is encapsulated in its own Terraform module: `modules/db`, `modules/web`, and `modules/wordpress`.
-- Terraform also generates an inventory and shared variables for Ansible, then ensures Python is available inside every container so Ansible can connect via the Docker transport.
+- Terraform also generates an inventory for Ansible, then ensures Python is available inside every container so Ansible can connect via the Docker transport.
 - **Ansible** orchestrates configuration through dedicated roles: `roles/db`, `roles/web`, and `roles/wordpress`, executed via focused playbooks grouped in `site.yml`.
 - Molecule scenarios under each role validate the Ansible logic in isolation using Docker-based test instances.
 
@@ -26,10 +26,8 @@ Optional tools:
 
 ## Quick start
 
-1. Copy the example variables file and edit any sensitive values:
-   ```bash
-   cp terraform/terraform.tfvars.example terraform/terraform.tfvars
-   ```
+1. Fill `ansible/group_vars/all.yml` with your desired configuration values.
+
 2. Initialize the Terraform working directory:
    ```bash
    make init
@@ -53,7 +51,7 @@ The `apply` target builds the containers, writes inventory data, and invokes Ans
 
 - `playbooks/` contains per-tier entrypoints (`db.yml`, `wordpress.yml`, `web.yml`).
 - `roles/` hosts reusable role logic for each container, including handlers, templates, and defaults.
-- `group_vars/all.yml` is rendered by Terraform so both tools share credentials and ports.
+- `group_vars/all.yml` must be filled by the user.
 
 Run all playbooks together with:
 

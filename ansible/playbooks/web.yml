@@ -14,3 +14,17 @@
         name: web
       vars:
         nginx_confs: "{{ yaml_nginx_confs }}"
+
+    - name: Enable our custom Nginx configuration
+      ansible.builtin.file:
+        src: /etc/nginx/conf.d/custom.conf
+        dest: /etc/nginx/sites-enabled/custom.conf
+        state: link
+        force: yes
+
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+        enabled: yes
+        use: service

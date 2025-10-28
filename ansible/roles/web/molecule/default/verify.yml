@@ -1,6 +1,6 @@
 ---
 - name: Verify
-  hosts: instance
+  hosts: all
   gather_facts: false
   tasks:
     - name: Check Nginx is installed
